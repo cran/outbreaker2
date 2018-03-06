@@ -12,7 +12,7 @@
 
 <meta name="author" content="Thibaut Jombart" />
 
-<meta name="date" content="2017-11-24" />
+<meta name="date" content="2018-03-06" />
 
 <title>outbreaker2: Rcpp API</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">outbreaker2: Rcpp API</h1>
 <h4 class="author"><em>Thibaut Jombart</em></h4>
-<h4 class="date"><em>2017-11-24</em></h4>
+<h4 class="date"><em>2018-03-06</em></h4>
 
 
 <div id="TOC">
@@ -89,7 +89,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## get all functions in an environment
 x &lt;-<span class="st"> </span><span class="kw">get_cpp_api</span>()
 x</code></pre></div>
-<pre><code>## &lt;environment: 0x4aa7450&gt;</code></pre>
+<pre><code>## &lt;environment: 0x38e14a0&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## check content
 <span class="kw">ls</span>(x)</code></pre></div>
 <pre><code>##  [1] &quot;cpp_ll_all&quot;               &quot;cpp_ll_contact&quot;          
@@ -106,7 +106,7 @@ x</code></pre></div>
 x$cpp_ll_all</code></pre></div>
 <pre><code>## function (data, param, i = NULL, custom_functions = NULL) 
 ## {
-##     .Call(outbreaker2_cpp_ll_all, data, param, i, custom_functions)
+##     .Call(`_outbreaker2_cpp_ll_all`, data, param, i, custom_functions)
 ## }
 ## &lt;environment: namespace:outbreaker2&gt;</code></pre>
 </div>

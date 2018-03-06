@@ -2,8 +2,6 @@
 [![Travis-CI Build Status](https://travis-ci.org/reconhub/outbreaker2.svg?branch=master)](https://travis-ci.org/reconhub/outbreaker2)
 [![Appveyor build status](https://ci.appveyor.com/api/projects/status/yj449x0yqhphvcrt/branch/master?svg=true)](https://ci.appveyor.com/project/thibautjombart/outbreaker2/branch/master)
 [![Coverage Status](https://codecov.io/github/reconhub/outbreaker2/coverage.svg?branch=master)](https://codecov.io/github/reconhub/outbreaker2?branch=master)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/outbreaker2)](https://cran.r-project.org/package=outbreaker2)
-
 
 
 *outbreaker2: a framework for reconstructing disease outbreaks*
@@ -58,7 +56,7 @@ Documentation
 -------------
 
 *outbreaker2* is fully documented on a [dedicated
- website](http://www.repidemicsconsortium.org/outbreaker2/). 
+ website](http://www.repidemicsconsortium.org/outbreaker2/).
 
 It also comes with the following vignettes:
 
@@ -78,15 +76,13 @@ Contributors
 - [Rich Fitzjohn](https://github.com/richfitz)
 
 
-See details of contributions on: <br>
-https://github.com/reconhub/outbreaker2/graphs/contributors
-
-
+See details of contributions
+[here](https://github.com/reconhub/outbreaker2/graphs/contributors).
 
 Contributions are welcome via **pull requests**.
 
 Please note that this project is released with a [Contributor Code of
-Conduct](CONDUCT.md). By participating in this project you agree to abide by its
-terms.
+Conduct](https://github.com/reconhub/outbreaker2/blob/master/CONDUCT.md). By
+participating in this project you agree to abide by its terms.
 
-**Maintainer:** Thibaut Jombart (thibautjombart@gmail.com)
+**Maintainer:** Finlay Campbell (f.campbell15@imperial.ac.uk)
