@@ -5,17 +5,16 @@
 \alias{outbreaker_chains}
 \alias{plot.outbreaker_chains}
 \alias{summary.outbreaker_chains}
-\alias{plot.outbreaker_chains}
-\alias{summary.outbreaker_chains}
 \title{Basic methods for processing outbreaker results}
 \usage{
 \method{print}{outbreaker_chains}(x, n_row = 3, n_col = 8, ...)
 
-\method{plot}{outbreaker_chains}(x, y = "post", type = c("trace", "hist",
-  "density", "alpha", "t_inf", "kappa", "network"), burnin = 0,
-  min_support = 0.1, ...)
+\method{plot}{outbreaker_chains}(x, y = "post", type = c("trace",
+  "hist", "density", "alpha", "t_inf", "kappa", "network"), burnin = 0,
+  min_support = 0.1, labels = NULL, ...)
 
-\method{summary}{outbreaker_chains}(object, burnin = 0, ...)
+\method{summary}{outbreaker_chains}(object, burnin = 0,
+  method = c("mpa", "decycle"), ...)
 }
 \arguments{
 \item{x}{an \code{outbreaker_chains} object as returned by \code{outbreaker}.}
@@ -36,7 +35,17 @@
 \item{min_support}{a number between 0 and 1 indicating the minimum support of
 ancestries to be plotted; only used if 'type' is 'network'}
 
+\item{labels}{a vector of length N indicating the case labels (must be
+provided in the same order used for dates of symptom onset)}
+
 \item{object}{an \code{outbreaker_chains} object as returned by \code{outbreaker}.}
+
+\item{method}{the method used to determine consensus ancestries. 'mpa'
+(maximum posterior ancestry) simply returns the posterior ancestry with the
+highest posterior support for each case, even if this includes
+cycles. 'decycle' will return the maximum posterior ancestry, except when
+cycles are detected, in which case the link in the cycle with the lowest
+support is pruned and the tree recalculated.}
 }
 \description{
 Several methods are defined for instances of the class

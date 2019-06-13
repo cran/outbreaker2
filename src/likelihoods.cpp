@@ -69,8 +69,9 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 
 
     // Local variables used for computatoins
-    size_t n_mut = 0, sum_n_mut = 0;
-    size_t sum_n_non_mut = 0;
+    size_t n_mut = 0;
+    size_t n_non_mut = 0;
+    double out = 0;
     bool found[1];
     size_t ances[1];
     size_t n_generations[1];
@@ -120,9 +121,11 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 	    if (found[0]) {
 
 	      n_mut = cpp_get_n_mutations(data, j + 1, ances[0]); // remember the offset
-	      sum_n_mut += n_mut;
-	      sum_n_non_mut += (L - n_mut) + (n_generations[0] - 1) * L;
+	      n_non_mut = L - n_mut;
 
+	      out += n_mut*log(n_generations[0]*mu) +
+		n_non_mut*log(1 - n_generations[0]*mu);
+		
 	    }
 	  }
 	}
@@ -150,9 +153,11 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
 	    if (found[0]) {
 
 	      n_mut = cpp_get_n_mutations(data, j + 1, ances[0]); // remember the offset
-	      sum_n_mut += n_mut;
-	      sum_n_non_mut += (L - n_mut) + (n_generations[0] - 1) * L;
-
+	      n_non_mut = L - n_mut;
+	      
+	      out += n_mut*log(n_generations[0]*mu) +
+		n_non_mut*log(1 - n_generations[0]*mu);
+	      
 	    }
 	  }
 	  
@@ -161,8 +166,8 @@ double cpp_ll_genetic(Rcpp::List data, Rcpp::List param, SEXP i,
       }
     }
 
-    return log(mu) * (double) sum_n_mut + log(1.0 - mu) * (double) sum_n_non_mut;
-
+    return(out);
+    
   } else { // use of a customized likelihood function
     Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
 
@@ -432,6 +437,7 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i,
 
   if (custom_function == R_NilValue) {
 
+    double out;
     double eps = Rcpp::as<double>(param["eps"]);
     double lambda = Rcpp::as<double>(param["lambda"]);
     Rcpp::IntegerVector alpha = param["alpha"];
@@ -464,11 +470,32 @@ double cpp_ll_contact(Rcpp::List data, Rcpp::List param, SEXP i,
     false_neg = N - imports - unobsv_case - true_pos;
     true_neg = C_combn - true_pos - false_pos - false_neg;
 
-    return log(eps) * (double) true_pos +
-      log(eps*lambda) * (double) false_pos +
-      log(1 - eps) * (double) false_neg +
-      log(1 - eps*lambda) * (double) true_neg;
+    // deal with special case when lambda == 0 and eps == 1, to avoid log(0)
+    if(lambda == 0.0) {
+      if(false_pos > 0) {
+	out = R_NegInf;
+      } else {
+	log(eps) * (double) true_pos +
+	  log(1 - eps) * (double) false_neg +
+	  log(1 - eps*lambda) * (double) true_neg;
+      }
+    } else if(eps == 1.0) {
+      if(false_neg > 0) {
+	out = R_NegInf;
+      } else {
+	out = log(eps) * (double) true_pos +
+	  log(eps*lambda) * (double) false_pos +
+	  log(1 - eps*lambda) * (double) true_neg;
+      }
+    } else {
+      out = log(eps) * (double) true_pos +
+	log(eps*lambda) * (double) false_pos +
+	log(1 - eps) * (double) false_neg +
+	log(1 - eps*lambda) * (double) true_neg;
+    }
 
+    return out;
+    
   } else { //use of a customized likelihood function
     Rcpp::Function f = Rcpp::as<Rcpp::Function>(custom_function);
 

@@ -2,7 +2,9 @@
 [![Travis-CI Build Status](https://travis-ci.org/reconhub/outbreaker2.svg?branch=master)](https://travis-ci.org/reconhub/outbreaker2)
 [![Appveyor build status](https://ci.appveyor.com/api/projects/status/yj449x0yqhphvcrt/branch/master?svg=true)](https://ci.appveyor.com/project/thibautjombart/outbreaker2/branch/master)
 [![Coverage Status](https://codecov.io/github/reconhub/outbreaker2/coverage.svg?branch=master)](https://codecov.io/github/reconhub/outbreaker2?branch=master)
-
+[![CRAN Downloads](https://cranlogs.r-pkg.org/badges/outbreaker2)](https://cran.r-project.org/package=outbreaker2)
+[![Downloads from Rstudio mirror](https://cranlogs.r-pkg.org/badges/grand-total/outbreaker2)](http://www.r-pkg.org/pkg/outbreaker2)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/outbreaker2)](https://cran.r-project.org/package=outbreaker2)
 
 *outbreaker2: a framework for reconstructing disease outbreaks*
 ---------------------------------------------------------------
@@ -15,6 +17,17 @@ Welcome to the project page of *outbreaker2*, a Bayesian framework
  and parameter movements (see [customisation
  vignette](http://www.repidemicsconsortium.org/outbreaker2/articles/customisation.html)).
 
+### NOTE: Correction to genetic likelihood
+
+The genetic likelihood of the [original *outbreaker* paper](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003457) was found to contain a minor mistake in accounting for unobserved generations of infection. As of June 7th 2019, *outbreaker2* will use the correct genetic likelihood published [here](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006930).
+
+The original genetic likelihood was:
+
+<img src="https://latex.codecogs.com/svg.latex?\mu^{d(s_i,s_{\alpha_i})}(1&space;-&space;\mu)^{(\kappa_i\times&space;l(s_i,&space;s_{\alpha_i}))&space;-&space;d(s_i,s_{\alpha_i})}" title="\mu^{d(s_i,s_{\alpha_i})}(1 - \mu)^{(\kappa_i\times l(s_i, s_{\alpha_i})) - d(s_i,s_{\alpha_i})}" />
+
+The corrected genetic likelihood is:
+
+<img src="https://latex.codecogs.com/svg.latex?(\kappa_i&space;\mu)^{d(s_i,s_{\alpha_i})}(1&space;-&space;\kappa_i&space;\mu)^{l(s_i,&space;s_{\alpha_i})&space;-&space;d(s_i,s_{\alpha_i})}" title="(\kappa_i \mu)^{d(s_i,s_{\alpha_i})}(1 - \mu)^{(\kappa_i\times l(s_i, s_{\alpha_i})) - d(s_i,s_{\alpha_i})}" />
 
 <br>
 
@@ -74,7 +87,8 @@ Contributors
 - [Thibaut Jombart](https://github.com/thibautjombart)
 - [Finlay Campbell](https://github.com/finlaycampbell)
 - [Rich Fitzjohn](https://github.com/richfitz)
-
+- [Gerry Tonkin-Hill](https://github.com/gtonkinhill)
+- [Alexis Robert](https://github.com/alxsrobert)
 
 See details of contributions
 [here](https://github.com/reconhub/outbreaker2/graphs/contributors).

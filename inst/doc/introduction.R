@@ -33,12 +33,12 @@ args(outbreaker)
 
 dna <- fake_outbreak$dna
 dates <- fake_outbreak$sample
+ctd <- fake_outbreak$ctd
 w <- fake_outbreak$w
-data <- outbreaker_data(dna = dna, dates = dates, w_dens = w)
+data <- outbreaker_data(dna = dna, dates = dates, ctd = ctd, w_dens = w)
 
 ## we set the seed to ensure results won't change
 set.seed(1)
-
 
 res <- outbreaker(data = data)
 
@@ -95,7 +95,7 @@ summary(res)
 
 ## ---- config2, cache = TRUE----------------------------------------------
 
-config2 <- create_config(n_iter = 2e4,
+config2 <- create_config(n_iter = 3e4,
                          sample_every = 20,
 		         init_tree ="star",
 			 move_kappa = FALSE,
@@ -110,8 +110,8 @@ plot(res2, burnin = 2000)
 
 ## ---- res2---------------------------------------------------------------
 
-summary(res2, burnin = 4000)
-tree2 <- summary(res2, burnin = 4000)$tree
+summary(res2, burnin = 3000)
+tree2 <- summary(res2, burnin = 3000)$tree
 
 comparison <- data.frame(case = 1:30,
                        	 inferred = paste(tree2$from),
@@ -125,6 +125,6 @@ mean(comparison$correct)
 
 ## ---- net2---------------------------------------------------------------
 
-plot(res2, type = "network", burnin = 4000, min_support = 0.01)
+plot(res2, type = "network", burnin = 3000, min_support = 0.01)
 
 
