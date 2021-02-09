@@ -1,4 +1,4 @@
-## ---- echo = FALSE-------------------------------------------------------
+## ---- echo = FALSE------------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>", 
@@ -7,7 +7,7 @@ knitr::opts_chunk$set(
   fig.path="figs-customisation/"
 )
 
-## ---- f_pi---------------------------------------------------------------
+## ---- f_pi--------------------------------------------------------------------
 f <- function(pi) {
     ifelse(pi < 0.8, 0, 5)
 }
@@ -21,7 +21,7 @@ plot(f, type = "s", col = "blue",
      main = expression(paste("New prior for ", pi)))
 
 
-## ---- custom_prior-------------------------------------------------------
+## ---- custom_prior------------------------------------------------------------
 library(outbreaker2)
 
 f_mu <- function(param) {
@@ -37,7 +37,7 @@ priors <- custom_priors(pi = f_pi, mu = f_mu)
 priors
 
 
-## ---- wrong_prior, error = TRUE------------------------------------------
+## ---- wrong_prior, error = TRUE-----------------------------------------------
 
 ## wrong: not a function
 ## should be pi = function(x){0.0}
@@ -47,7 +47,7 @@ custom_priors(pi = 0.0)
 custom_priors(pi = function(x, y){0.0})
 
 
-## ---- run_custom_priors--------------------------------------------------
+## ---- run_custom_priors-------------------------------------------------------
 
 dna <- fake_outbreak$dna
 dates <- fake_outbreak$sample
@@ -61,7 +61,7 @@ set.seed(1)
 res <- outbreaker(data = data, priors = priors)
 
 
-## ---- traces_custom_priors-----------------------------------------------
+## ---- traces_custom_priors----------------------------------------------------
 
 plot(res)
 plot(res, "pi", burnin = 500)
@@ -70,7 +70,7 @@ plot(res, "pi", type = "density", burnin = 500)
 plot(res, "mu", type = "hist", burnin = 500)
 
 
-## ---- tree_custom_priors-------------------------------------------------
+## ---- tree_custom_priors------------------------------------------------------
 
 summary(res, burnin = 500)
 tree <- summary(res, burnin = 500)$tree
@@ -85,12 +85,12 @@ comparison
 mean(comparison$correct)
 
 
-## ---- likelihood_components----------------------------------------------
+## ---- likelihood_components---------------------------------------------------
 
 custom_likelihoods()
 
 
-## ---- wrong_likelihood, error = TRUE-------------------------------------
+## ---- wrong_likelihood, error = TRUE------------------------------------------
 
 ## wrong: not a function
 custom_likelihoods(genetic = "fubar")
@@ -99,7 +99,7 @@ custom_likelihoods(genetic = "fubar")
 custom_likelihoods(genetic = function(x){ 0.0 })
 
 
-## ---- null_model---------------------------------------------------------
+## ---- null_model--------------------------------------------------------------
 
 f_null <- function(data, param) {
    return(0.0)
@@ -114,7 +114,7 @@ null_model <- custom_likelihoods(genetic = f_null,
 null_model
 
 
-## ---- run_null_model, cache = TRUE---------------------------------------
+## ---- run_null_model, cache = TRUE--------------------------------------------
 
 null_config <- list(find_import = FALSE,
 n_iter = 500,
@@ -127,19 +127,19 @@ config = null_config,
 likelihoods = null_model)
 
 
-## ---- res_null_model-----------------------------------------------------
+## ---- res_null_model----------------------------------------------------------
 
 plot(res_null)
 plot(res_null, "pi")
 plot(res_null, "mu")
 
 
-## ---- null_trees---------------------------------------------------------
+## ---- null_trees--------------------------------------------------------------
 
 plot(res_null, type = "alpha")
 
 
-## ---- null_net-----------------------------------------------------------
+## ---- null_net----------------------------------------------------------------
 
 ## extract nodes and edges from the visNetwork object
 temp <- plot(res_null, type = "network", min_support = 0)
@@ -157,13 +157,13 @@ plot(net_null, layout = layout.circle,
      main = "Null model, posterior trees")
 
 
-## ---- res_null_diag------------------------------------------------------
+## ---- res_null_diag-----------------------------------------------------------
 
 plot(res_null, type = "kappa")
 plot(res_null, type = "t_inf")
 
 
-## ---- res_null_priors----------------------------------------------------
+## ---- res_null_priors---------------------------------------------------------
 
 par(xpd=TRUE)
 hist(res_null$mu, prob = TRUE, col = "grey",
@@ -181,7 +181,7 @@ invisible(replicate(30,
      points(density(rbeta(500, 10, 1)), type = "l", col = "blue")))
 
 
-## ---- wt_custom----------------------------------------------------------
+## ---- wt_custom---------------------------------------------------------------
 
 onset_data <- outbreaker_data(dates = fake_outbreak$onset,
 	      	              w_dens = fake_outbreak$w)
@@ -190,14 +190,14 @@ wt_model <- custom_likelihoods(timing_sampling = f_null,
                                reporting = f_null)
 
 
-## ---- wt_config----------------------------------------------------------
+## ---- wt_config---------------------------------------------------------------
 
 wt_config <- create_config(init_kappa = 1, move_kappa = FALSE,
                            init_pi = 1, move_pi = FALSE,
                            move_mu = FALSE)
 
 
-## ---- run_wt, cache = TRUE-----------------------------------------------
+## ---- run_wt, cache = TRUE----------------------------------------------------
 
 set.seed(1)
 res_wt <- outbreaker(data = onset_data,
@@ -205,7 +205,7 @@ res_wt <- outbreaker(data = onset_data,
                      likelihoods = wt_model)
 		       
 
-## ---- res_wt-------------------------------------------------------------
+## ---- res_wt------------------------------------------------------------------
 
 plot(res_wt)
 plot(res_wt, burnin = 500)
@@ -213,7 +213,7 @@ plot(res_wt, burnin = 500, type = "alpha")
 summary(res_wt)
 
 
-## ---- wt_net-------------------------------------------------------------
+## ---- wt_net------------------------------------------------------------------
 
 ## extract nodes and edges from the visNetwork object
 temp <- plot(res_wt, type = "network", min_support = 0.05)
@@ -230,12 +230,12 @@ plot(net_wt, layout = layout.circle,
      main = "WT model, posterior trees")
 
 
-## ---- move_defaults------------------------------------------------------
+## ---- move_defaults-----------------------------------------------------------
 
 lapply(custom_moves(),  args)
 
 
-## ---- custom_move_mu-----------------------------------------------------
+## ---- custom_move_mu----------------------------------------------------------
 
 move_mu <- function(param, config) {
 
@@ -250,7 +250,7 @@ moves <- custom_moves(mu = move_mu)
 quick_config <- list(n_iter = 500, sample_every = 1, find_import = FALSE)
 
 
-## ---- bind_moves---------------------------------------------------------
+## ---- bind_moves--------------------------------------------------------------
 
 ## bind quick_config to function
 move_mu_intern <- bind_to_function(move_mu, config = quick_config)
@@ -265,7 +265,7 @@ names(environment(move_mu_intern))
 identical(environment(move_mu_intern)$config, quick_config)
 
 
-## ---- run_custom_move_mu-------------------------------------------------
+## ---- run_custom_move_mu------------------------------------------------------
 
 NEW_MOVE_HAS_BEEN_USED <- FALSE
 
@@ -278,7 +278,7 @@ plot(res_move_mu, "pi")
 plot(res_move_mu, "mu")
 
 
-## ---- new_move_ances-----------------------------------------------------
+## ---- new_move_ances----------------------------------------------------------
 
 api <- get_cpp_api()
 
@@ -317,7 +317,7 @@ for (i in 1:data$N) {
 moves <- custom_moves(new_move = new_move_ances)
 
 
-## ---- run_new_move, cache = TRUE-----------------------------------------
+## ---- run_new_move, cache = TRUE----------------------------------------------
 
 N_ACCEPT <- 0
 N_REJECT <- 0
@@ -329,14 +329,14 @@ N_ACCEPT
 N_REJECT
 
 
-## ---- res_new_move-------------------------------------------------------
+## ---- res_new_move------------------------------------------------------------
 
 plot(res_new_move)
 plot(res_new_move, type = "alpha")
 summary(res_new_move)
 
 
-## ---- check_new_move-----------------------------------------------------
+## ---- check_new_move----------------------------------------------------------
 
 summary(res_new_move, burnin = 5000)
 tree2 <- summary(res_new_move, burnin = 5000)$tree

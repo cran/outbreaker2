@@ -9,12 +9,18 @@
 \usage{
 \method{print}{outbreaker_chains}(x, n_row = 3, n_col = 8, ...)
 
-\method{plot}{outbreaker_chains}(x, y = "post", type = c("trace",
-  "hist", "density", "alpha", "t_inf", "kappa", "network"), burnin = 0,
-  min_support = 0.1, labels = NULL, ...)
+\method{plot}{outbreaker_chains}(
+  x,
+  y = "post",
+  type = c("trace", "hist", "density", "alpha", "t_inf", "kappa", "network"),
+  group = NULL,
+  burnin = 0,
+  min_support = 0.1,
+  labels = NULL,
+  ...
+)
 
-\method{summary}{outbreaker_chains}(object, burnin = 0,
-  method = c("mpa", "decycle"), ...)
+\method{summary}{outbreaker_chains}(object, burnin = 0, method = c("mpa", "decycle"), ...)
 }
 \arguments{
 \item{x}{an \code{outbreaker_chains} object as returned by \code{outbreaker}.}
@@ -29,6 +35,9 @@
 \code{outbreaker_chains} object to plot}
 
 \item{type}{a character string indicating the kind of plot to be used (see details)}
+
+\item{group}{a vector of character strings indicating the parameters to display, 
+or "all" to display all global parameters (non node-specific parameters).}
 
 \item{burnin}{the number of iterations to be discarded as burnin}
 
@@ -50,7 +59,7 @@ support is pruned and the tree recalculated.}
 \description{
 Several methods are defined for instances of the class
 \code{outbreaker_chains}, returned by \code{\link{outbreaker}}, including:
-\code{print}, \code{plot}
+\code{print}, \code{plot}, \code{summary}
 }
 \details{
 \code{type} indicates the type of graphic to plot:

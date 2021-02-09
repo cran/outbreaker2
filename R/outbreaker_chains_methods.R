@@ -2,7 +2,7 @@
 #'
 #' Several methods are defined for instances of the class
 #' \code{outbreaker_chains}, returned by \code{\link{outbreaker}}, including:
-#' \code{print}, \code{plot}
+#' \code{print}, \code{plot}, \code{summary}
 #'
 #' @rdname outbreaker_chains
 #'
@@ -58,6 +58,9 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #'   \code{outbreaker_chains} object to plot
 #'
 #' @param type a character string indicating the kind of plot to be used (see details)
+#' 
+#' @param group a vector of character strings indicating the parameters to display, 
+#' or "all" to display all global parameters (non node-specific parameters).
 #'
 #' @param burnin the number of iterations to be discarded as burnin
 #'
@@ -76,9 +79,9 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #' @seealso See \href{http://www.repidemicsconsortium.org/outbreaker2/articles/introduction.html#graphics}{introduction vignette} for detailed examples on how to visualise \code{outbreaker_chains} objects.
 #'
 #' @details \code{type} indicates the type of graphic to plot:
-#' 
+#'
 #' \itemize{
-#' 
+#'
 #' \item \code{trace} to visualise MCMC traces for parameters or augmented data (plots the
 #' log-likelihood by default)
 #'
@@ -101,13 +104,16 @@ print.outbreaker_chains <- function(x, n_row = 3, n_col = 8, ...) {
 #' @importFrom ggplot2 ggplot geom_line geom_point geom_histogram geom_density
 #'   geom_violin aes aes_string coord_flip labs guides scale_size_area
 #'   scale_x_discrete scale_y_discrete scale_color_manual scale_fill_manual
+#'   scale_x_continuous scale_y_continuous theme_bw facet_wrap
 #'
+#' @importFrom stats reshape
 #' @importFrom grDevices xyTable
 #' @importFrom graphics plot
 #'
 plot.outbreaker_chains <- function(x, y = "post",
                                    type = c("trace", "hist", "density",
                                             "alpha", "t_inf", "kappa", "network"),
+                                   group = NULL, 
                                    burnin = 0, min_support = 0.1, labels = NULL, ...) {
 
   ## CHECKS ##
@@ -120,7 +126,7 @@ plot.outbreaker_chains <- function(x, y = "post",
 
   ## hopefully cran will avoid spurious warnings along the lines of "no
   ## visible binding for global variable" when using ggplot2::aes(...)
-  ##
+
   frequency <- NULL
 
   ## GET DATA TO PLOT ##
@@ -129,25 +135,94 @@ plot.outbreaker_chains <- function(x, y = "post",
   }
   x <- x[x$step>burnin,,drop = FALSE]
 
+  ## check group
+  if(!is.null(group)) {
+    if(length(group) == 1L && group == "all") {
+      ##remove _[digit] vars
+      y_vars = names(x)[!grepl("(_[[:digit:]]+$)", names(x))]
+    } else if(all(group %in% names(x))) {
+      y_vars = c("step", group)
+    } else {
+      stop("grouping variables not found in outbreaker object")
+    }
+    ## get only relevant data
+    x_sub = as.data.frame(x)[,y_vars]
+    ## switch it to long format to use in ggplot
+    x_long = reshape(x_sub, 
+                     idvar = "step", 
+                     ids = x_sub$step,
+                     direction = "long", 
+                     new.row.names = NULL,
+                     timevar = "Parameters", 
+                     v.names = "y",
+                     varying = list(names(x_sub)[2:ncol(x_sub)]), 
+                     times = names(x_sub)[2:ncol(x_sub)])
+  }
+
   ## MAKE PLOT ##
   if (type == "trace") {
-    out <- ggplot(x) + geom_line(aes_string(x="step", y = y)) +
-      labs(x="Iteration", y = y, title = paste("trace:",y))
+    if (!is.null(group)) {
+      out <- ggplot(x_long) +
+        geom_line(aes_string(x = "step", y = "y")) +
+        scale_x_continuous(name = "Iteration") + 
+        scale_y_continuous(name = NULL) + 
+        facet_wrap(~ Parameters, scales = "free") 
+    } else {
+      out <- ggplot(x) +
+        geom_line(aes_string(x = "step", y = y)) +
+        labs(x = "Iteration",
+             y = y,
+             title = paste("trace:",y))
+    }
   }
 
   if (type == "hist") {
-    out <- ggplot(x) + geom_histogram(aes_string(x = y)) +
-      geom_point(aes_string(x = y, y = 0), shape="|", alpha = 0.5, size = 3) +
-      labs(x = y, title = paste("histogram:",y))
+    if (!is.null(group)) {
+      out <- ggplot(x_long) +
+        geom_histogram(aes_string(x = "y")) +
+        geom_point(aes_string(x = "y", y = 0),
+                   shape="|",
+                   alpha = 0.5,
+                   size = 3) +
+        scale_x_continuous(name = NULL) + 
+        scale_y_continuous(name = NULL) + 
+        facet_wrap(~Parameters, scales = "free") 
+    } else {
+      out <- ggplot(x) +
+        geom_histogram(aes_string(x = y)) +
+        geom_point(aes_string(x = y, y = 0),
+                   shape="|",
+                   alpha = 0.5,
+                   size = 3) +
+        labs(x = y,
+             title = paste("histogram:",y))
+    }
   }
 
   if (type == "density") {
-    out <- ggplot(x) + geom_density(aes_string(x = y)) +
-      geom_point(aes_string(x = y, y = 0), shape="|", alpha = 0.5, size = 3) +
-      labs(x = y, title = paste("density:",y))
+    if (!is.null(group)) {
+      out <- ggplot(x_long) +
+        geom_density(aes_string(x = "y")) +
+        geom_point(aes_string(x = "y", y = 0),
+                   shape="|",
+                   alpha = 0.5,
+                   size = 3) +
+        scale_x_continuous(name = NULL) + 
+        scale_y_continuous(name = NULL) + 
+        facet_wrap(~Parameters, scales = "free") 
+    } else {
+      out <- ggplot(x) +
+        geom_density(aes_string(x = y)) +
+        geom_point(aes_string(x = y, y = 0),
+                   shape="|",
+                   alpha = 0.5,
+                   size = 3) +
+        labs(x = y,
+             title = paste("density:",y))
+    }
   }
 
-  if (type=="alpha") {
+  if (type == "alpha") {
     alpha <- as.matrix(x[,grep("alpha", names(x))])
     colnames(alpha) <- seq_len(ncol(alpha))
     from <- as.vector(alpha)
@@ -193,7 +268,7 @@ plot.outbreaker_chains <- function(x, y = "post",
       guides(colour = FALSE)
   }
 
-  if (type=="t_inf") {
+  if (type == "t_inf") {
     get_t_inf_lab <- function(labels = NULL) {
       N <- ncol(t_inf)
       if(is.null(labels)) labels <- 1:N
@@ -212,7 +287,7 @@ plot.outbreaker_chains <- function(x, y = "post",
     }
 
     t_inf <- as.matrix(x[,grep("t_inf", names(x))])
-    tmp <- get_lab_color(...)
+    tmp <- get_lab_color(labels, ...)
     dates <- as.vector(t_inf)
     cases <- as.vector(col(t_inf))
     out_dat <- data.frame(cases = factor(cases), dates = dates)
@@ -224,7 +299,7 @@ plot.outbreaker_chains <- function(x, y = "post",
       scale_x_discrete(labels = tmp$t_inf_lab)
   }
 
-  if (type=="kappa") {
+  if (type == "kappa") {
     get_kappa_lab <- function(labels = NULL) {
       N <- ncol(kappa)
       if(is.null(labels)) labels <- 1:N
@@ -246,14 +321,14 @@ plot.outbreaker_chains <- function(x, y = "post",
     out <- ggplot(out_dat) +
       geom_point(aes(x = generations, y = as.factor(cases), size = frequency, color = factor(cases))) +
       scale_size_area() +
-      scale_y_discrete(labels = get_kappa_lab(...)) +
+      scale_y_discrete(labels = get_kappa_lab(labels)) +
       guides(colour = FALSE) +
       labs(title = "number of generations between cases",
            x = "number of generations to ancestor",
            y = NULL)
   }
 
-  if (type=="network") {
+  if (type == "network") {
     ## extract edge info: ancestries
     alpha <- x[, grep("alpha",names(x)), drop = FALSE]
     from <- unlist(alpha)
@@ -290,7 +365,7 @@ plot.outbreaker_chains <- function(x, y = "post",
                           numeric(1))
     nodes$color <- case_cols
     nodes$shape <- rep("dot", N)
-    nodes$label <- get_node_lab(...)
+    nodes$label <- get_node_lab(labels)
 
     smry <- summary(x, burnin = burnin)
     is_imported <- is.na(smry$tree$from)
@@ -321,7 +396,7 @@ plot.outbreaker_chains <- function(x, y = "post",
 #'   cycles. 'decycle' will return the maximum posterior ancestry, except when
 #'   cycles are detected, in which case the link in the cycle with the lowest
 #'   support is pruned and the tree recalculated.
-#' 
+#'
 #' @export
 #' @importFrom stats median
 summary.outbreaker_chains <- function(object, burnin = 0, method = c("mpa", "decycle"), ...) {
@@ -364,7 +439,7 @@ summary.outbreaker_chains <- function(object, burnin = 0, method = c("mpa", "dec
 
   ## summary of alpha ##
   alpha <- as.matrix(x[,grep("alpha", names(x))])
-  
+
   method <- match.arg(method)
 
   if(method == 'mpa') {
@@ -388,7 +463,7 @@ summary.outbreaker_chains <- function(object, burnin = 0, method = c("mpa", "dec
     out$tree$from <- cons$from
     out$tree$to <- cons$to
     support <- cons$support
-    
+
   }
 
   ## summary of t_inf ##
@@ -396,7 +471,7 @@ summary.outbreaker_chains <- function(object, burnin = 0, method = c("mpa", "dec
   out$tree$time <- apply(t_inf, 2, median)
 
   out$tree$support <- support
-  
+
   ## summary of kappa ##
   kappa <- as.matrix(x[,grep("kappa", names(x))])
   out$tree$generations <- apply(kappa, 2, median, na.rm = TRUE)

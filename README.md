@@ -3,8 +3,8 @@
 [![Appveyor build status](https://ci.appveyor.com/api/projects/status/yj449x0yqhphvcrt/branch/master?svg=true)](https://ci.appveyor.com/project/thibautjombart/outbreaker2/branch/master)
 [![Coverage Status](https://codecov.io/github/reconhub/outbreaker2/coverage.svg?branch=master)](https://codecov.io/github/reconhub/outbreaker2?branch=master)
 [![CRAN Downloads](https://cranlogs.r-pkg.org/badges/outbreaker2)](https://cran.r-project.org/package=outbreaker2)
-[![Downloads from Rstudio mirror](https://cranlogs.r-pkg.org/badges/grand-total/outbreaker2)](http://www.r-pkg.org/pkg/outbreaker2)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/outbreaker2)](https://cran.r-project.org/package=outbreaker2)
+[![Downloads from Rstudio mirror](https://cranlogs.r-pkg.org/badges/grand-total/outbreaker2)](https://www.r-pkg.org:443/pkg/outbreaker2)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/outbreaker2)](https://cran.r-project.org/package=outbreaker2)
 
 *outbreaker2: a framework for reconstructing disease outbreaks*
 ---------------------------------------------------------------
@@ -89,6 +89,8 @@ Contributors
 - [Rich Fitzjohn](https://github.com/richfitz)
 - [Gerry Tonkin-Hill](https://github.com/gtonkinhill)
 - [Alexis Robert](https://github.com/alxsrobert)
+- [Kristjan Eldjarn](https://github.com/kreldjarn)
+
 
 See details of contributions
 [here](https://github.com/reconhub/outbreaker2/graphs/contributors).
