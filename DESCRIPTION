@@ -1,6 +1,6 @@
 Package: outbreaker2
-Version: 1.1.2
-Date: 2021-01-25
+Version: 1.1.3
+Date: 2022-05-23
 Title: Bayesian Reconstruction of Disease Outbreaks by Combining
         Epidemiologic and Genomic Data
 Authors@R: c(person("Thibaut", "Jombart",
@@ -28,18 +28,18 @@ Description: Bayesian reconstruction of disease outbreaks using epidemiological
     Cori A, Ferguson N, Jombart T. 2019. <doi:10.1371/journal.pcbi.1006930>.
 License: MIT + file LICENSE
 Suggests: coda, microbenchmark, testthat, knitr, rmarkdown, igraph,
-        epicontacts
+        epicontacts, adegenet
 Depends: R (>= 3.5.0)
 Imports: utils, methods, stats, grDevices, Rcpp, ape, ggplot2,
         magrittr, visNetwork
 LazyData: true
 LinkingTo: Rcpp
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 SystemRequirements: C++11
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2021-02-09 12:17:45 UTC; campbellf
+Packaged: 2022-05-23 07:50:24 UTC; campbellf
 Author: Thibaut Jombart [aut],
   Finlay Campbell [aut, cre],
   Rich Fitzjohn [aut],
@@ -47,4 +47,4 @@ Author: Thibaut Jombart [aut],
   Kristjan Eldjarn [ctb],
   Alexis Robert [ctb]
 Repository: CRAN
-Date/Publication: 2021-02-09 13:40:18 UTC
+Date/Publication: 2022-05-23 12:20:02 UTC
