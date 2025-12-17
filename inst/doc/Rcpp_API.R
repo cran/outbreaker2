@@ -12,7 +12,7 @@ ls(x)
 x$cpp_ll_all
 
 
-## ---- arguments---------------------------------------------------------------
+## ----arguments----------------------------------------------------------------
 
 list_args <- lapply(x, args)[ls(x)]
 list_args
@@ -25,13 +25,13 @@ args <- sort(unique(unlist(lapply(list_formals, names))))
 args
 
 
-## ---- echo = FALSE------------------------------------------------------------
+## ----echo = FALSE-------------------------------------------------------------
 
 temp <- sub("cpp_prior_", "", ls(x, pattern = "cpp_prior.*"))
 setdiff(temp, "all") 
 
 
-## ---- echo = FALSE------------------------------------------------------------
+## ----echo = FALSE-------------------------------------------------------------
 temp <- sub("cpp_ll_", "", ls(x, pattern = "cpp_ll.*"))
 setdiff(temp, c("timing", "all"))	    
 
